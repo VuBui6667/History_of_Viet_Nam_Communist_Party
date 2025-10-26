@@ -4,23 +4,13 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
-import Section1 from "./components/section1/Section1";
-import dynamic from "next/dynamic";
-import Section5 from "./components/section5/Section5";
-import useScreenSize from "@/hooks/use-screen-size";
-import Section2 from "./components/section2/Section2";
-import Section3 from "./components/section3/Section2";
-import Section4 from "./components/section4/Section4";
-
-// const Section2 = dynamic(() => import('./components/section2/Section2'));
-// const Section3 = dynamic(() => import('./components/section3/Section2'));
-// const Section4 = dynamic(() => import('./components/section4/Section4'));
+import Section1 from "../components/section1/Section1";
+import Section2 from "../components/section2/Section2";
+import Section3 from "../components/section3/Section2";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 export default function ScrollHorizontalPage() {
-  const screenSize = useScreenSize()
-
   useEffect(() => {
     const smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
@@ -84,14 +74,6 @@ export default function ScrollHorizontalPage() {
           </div>
         </div>
 
-        {/* HORIZONTAL GROUP 1 — Section 5 */}
-        <div className="horizontal-wrapper relative h-screen overflow-hidden">
-          <div className="horizontal-container flex h-screen">
-            {/* Each child must be full viewport width (w-screen) so container width = sum of children */}
-            <Section5 />
-          </div>
-        </div>
-
         {/* HORIZONTAL GROUP 2 — behaves the same (scroll horizontal inside this group) */}
         <div className="horizontal-wrapper relative h-screen overflow-hidden">
           <div className="horizontal-container flex h-screen">
@@ -99,14 +81,6 @@ export default function ScrollHorizontalPage() {
           </div>
         </div>
 
-        {/* HORIZONTAL GROUP 3 — behaves the same (scroll horizontal inside this group) */}
-        <div className="horizontal-wrapper relative h-screen overflow-hidden">
-          <div className="horizontal-container flex h-screen">
-            <Section4 />
-          </div>
-        </div>
-
-        {/* FINAL SECTION — vertical */}
         <section className="h-[100vh] flex items-center justify-center bg-gradient-to-br from-indigo-600 to-pink-500 text-white p-8">
           <div className="max-w-xl text-center">
             <div className="text-6xl mb-4">🎉</div>
