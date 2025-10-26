@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const Section1: React.FC = () => {
+  const sectionRef = useRef<HTMLElement | null>(null)
   const headingRef = useRef<HTMLDivElement | null>(null)
   const subRef = useRef<HTMLDivElement | null>(null)
   const chapterRefs = [
@@ -12,6 +14,8 @@ const Section1: React.FC = () => {
   ]
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+
     const tl = gsap.timeline()
     // small helper to create a typing tween that appends characters
     const type = (el: HTMLDivElement | null, text: string, duration = 1.2) => {
@@ -33,7 +37,11 @@ const Section1: React.FC = () => {
 
     // SAFELY read the final texts we want to animate
     type(headingRef.current, 'Công Cuộc Cải Cách Về Giá - Lương - Tiền', 2.2)
-    type(subRef.current, 'Vì sao công cuộc cải cách về giá - lương - tiền lại đưa nền kinh tế VN vào hỗn loạn? \n Bài học gì rút ra từ cuộc cải cách xương máu này?', 1.8)
+    type(
+      subRef.current,
+      'Vì sao công cuộc cải cách về giá - lương - tiền lại đưa nền kinh tế VN vào hỗn loạn? \n Bài học gì rút ra từ cuộc cải cách xương máu này?',
+      1.8
+    )
 
     const chapterTexts = [
       'Bối cảnh và lý do tiến hành cải cách',
@@ -47,13 +55,57 @@ const Section1: React.FC = () => {
       type(r.current, chapterTexts[i], 0.9 + i * 0.2)
     })
 
+    // Parallax scroll animations via ScrollTrigger
+    if (sectionRef.current) {
+      const baseTrigger = {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      }
+
+      // heading moves slower (parallax)
+      if (headingRef.current) {
+        gsap.to(headingRef.current, {
+          yPercent: -18,
+          ease: 'none',
+          scrollTrigger: { ...baseTrigger },
+        })
+      }
+
+      // sub moves slightly in opposite direction
+      if (subRef.current) {
+        gsap.to(subRef.current, {
+          yPercent: 8,
+          ease: 'none',
+          scrollTrigger: { ...baseTrigger },
+        })
+      }
+
+      // chapters each get slightly different parallax amounts
+      chapterRefs.forEach((r, i) => {
+        if (r.current) {
+          gsap.to(r.current, {
+            y: -30 - i * 12, // pixel offset; adjust to taste
+            ease: 'none',
+            scrollTrigger: { ...baseTrigger },
+          })
+        }
+      })
+    }
+
     return () => {
       tl.kill()
+      // kill all scroll triggers created by this component
+      ScrollTrigger.getAll().forEach((st) => st.kill())
     }
   }, [])
 
   return (
-    <section className="h-[110vh] min-h-screen bg-[#efe8db] text-[#0b0b0b] py-8 md:py-12 relative">
+    <section
+      ref={sectionRef}
+      className="h-[110vh] min-h-screen bg-[#efe8db] text-[#0b0b0b] py-8 md:py-12 relative"
+    >
       <header className="flex justify-between items-start mb-8 px-8 md:px-12">
         <div className="text-sm uppercase tracking-wider text-gray-600">VNR202 • Group 5</div>
       </header>
@@ -88,10 +140,6 @@ const Section1: React.FC = () => {
               ref={c.ref}
               className="font-extrabold text-3xl md:text-4xl lg:text-5xl mt-10 text-align-justify leading-tight text-center"
             />
-            {/* placeholder for an image
-            <div className="mt-6 flex justify-center">
-              <div className="w-20 h-20 bg-white/60 border border-black/20" />
-            </div> */}
           </div>
         ))}
       </div>

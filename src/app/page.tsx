@@ -106,25 +106,29 @@ export default function ScrollHorizontalPage() {
           </div>
         </div>
 
+
+
         {/* FINAL SECTION — vertical */}
-        <section className="h-[100vh] flex items-center justify-center bg-gradient-to-br from-indigo-600 to-pink-500 text-white p-8">
-          <div className="max-w-xl text-center">
-            <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-4xl font-extrabold mb-2">Cảm ơn bạn!</h2>
-            <p className="mb-6 text-lg leading-relaxed">
-              Bạn đã hoàn thành phần nội dung. Chúc mừng và cảm ơn vì đã đồng hành cùng chúng tôi!
-            </p>
+        <section className="relative h-screen">
+          {/* Background Pattern */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#e94b59_100%)]"></div>
+          </div>
 
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="bg-white text-indigo-600 px-5 py-2 rounded-lg font-semibold shadow hover:opacity-90"
-              >
-                Quay lên đầu
-              </button>
-
-              <button
-                onClick={() =>
+          {/* Hero Content */}
+          <div className="relative z-10 flex h-full flex-col items-center justify-center px-4">
+            <div className="max-w-3xl text-center">
+              <h1 className="mb-8 text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-black">
+                <span className="text-[#e94b59]">Hoàn Thành!</span>
+              </h1>
+              <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-700">
+                Bạn đã hoàn thành học phần. Chúc mừng và cảm ơn vì đã đồng hành cùng chúng tôi!
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button className="rounded-lg px-6 py-3 font-medium bg-[#e94b59] text-white hover:bg-red-600" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+                  Học lại
+                </button>
+                <button className="rounded-lg border px-6 py-3 font-medium border-slate-200 bg-white text-slate-900 hover:bg-slate-50" onClick={() =>
                   navigator.share
                     ? navigator.share({
                       title: "Hoàn thành",
@@ -132,13 +136,11 @@ export default function ScrollHorizontalPage() {
                       url: window.location.href,
                     })
                     : alert("Sao chép link: " + window.location.href)
-                }
-                className="border border-white/60 px-5 py-2 rounded-lg hover:bg-white/10"
-              >
-                Chia sẻ
-              </button>
+                }>
+                  Chia sẻ
+                </button>
+              </div>
             </div>
-
             <p className="mt-6 text-sm opacity-90">— Trân trọng, VNR202 • Group 5 —</p>
           </div>
         </section>

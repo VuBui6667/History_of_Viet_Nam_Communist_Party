@@ -1,175 +1,193 @@
-import React, { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { useInView } from 'react-intersection-observer'
-import { usePathname } from 'next/navigation'
-import cn from '@/utils'
+import React, { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import SwapNote from "../SwapNote";
+import { usePathname } from "next/navigation";
+import ViewModal from "../ViewModal";
+import Image from "next/image";
 
 const SectionChild2: React.FC = () => {
   const pathname = usePathname()
   const isQuiz = pathname === '/quiz'
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const bgRef = useRef<HTMLDivElement | null>(null);
+  const yearRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const scribbleRef = useRef<SVGPathElement | null>(null);
 
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const h1Ref = useRef<HTMLHeadingElement | null>(null)
-  const scribbleRef = useRef<SVGSVGElement | null>(null)
-  const imagesRef = useRef<Array<HTMLElement | null>>([])
-  const h2Ref = useRef<HTMLHeadingElement | null>(null)
-  const accentRef = useRef<SVGSVGElement | null>(null)
-
-  const { ref: inViewRef, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  })
-
-  // combine refs for inView detection and container
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!inView) return
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+    let ticking = false;
+    const clamp = (v: number, a = -1, b = 1) => Math.max(a, Math.min(b, v));
 
-      // overall container fade/scale in
-      tl.from(containerRef.current, {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-      })
+    const onScroll = () => {
+      if (!sectionRef.current) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const rect = sectionRef.current!.getBoundingClientRect();
+          const sectionCenterX = rect.left + rect.width / 2;
+          const viewportCenterX = window.innerWidth / 2;
+          const progress = clamp((sectionCenterX - viewportCenterX) / (window.innerWidth / 2));
 
-      // H1 reveal: split lines feel by staggering characters/lines
-      tl.from(
-        h1Ref.current,
-        {
-          y: 40,
-          opacity: 0,
-          duration: 0.9,
-          skewY: 2,
-        },
-        '-=0.4'
-      )
+          // multipliers increased for visible effect
+          const bgX = progress * 80;
+          const titleX = progress * 160;
+          const yearX = progress * 100;
+          const scribbleX = progress * 110;
+          const scribbleRot = progress * 10;
 
-      // decorative scribble: quick pop+rotate
-      tl.from(
-        scribbleRef.current,
-        {
-          opacity: 0,
-          scale: 0.6,
-          rotate: -10,
-          transformOrigin: '50% 50%',
-          duration: 0.7,
-        },
-        '-=0.6'
-      )
+          if (bgRef.current) {
+            gsap.to(bgRef.current, { x: bgX, ease: "power3.out", overwrite: true, duration: 0.6 });
+          }
+          if (titleRef.current) {
+            gsap.to(titleRef.current, { x: titleX, ease: "power3.out", overwrite: true, duration: 0.6 });
+          }
+          if (yearRef.current) {
+            gsap.to(yearRef.current, { x: yearX, ease: "power3.out", overwrite: true, duration: 0.6 });
+          }
+          if (scribbleRef.current) {
+            gsap.to(scribbleRef.current, {
+              x: scribbleX,
+              rotation: scribbleRot,
+              transformOrigin: "50% 50%",
+              ease: "power3.out",
+              overwrite: true,
+              duration: 0.6,
+            });
+          }
 
-      // image thumbnails: staggered pop + slight rotation
-      tl.from(
-        imagesRef.current,
-        {
-          scale: 0.85,
-          y: 20,
-          opacity: 0,
-          rotate: 2,
-          transformOrigin: '50% 50%',
-          duration: 0.7,
-          stagger: 0.12,
-        },
-        '-=0.6'
-      )
-
-      // large bottom heading
-      tl.from(
-        h2Ref.current,
-        {
-          y: 30,
-          opacity: 0,
-          duration: 0.9,
-        },
-        '-=0.5'
-      )
-
-      // small red accent w/ bounce
-      tl.fromTo(
-        accentRef.current,
-        { y: 10, opacity: 0, scale: 0.8 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'bounce.out' },
-        '-=0.5'
-      )
-
-      return () => {
-        tl.kill()
+          ticking = false;
+        });
+        ticking = true;
       }
-    }, containerRef)
+    };
 
-    return () => ctx.revert()
-  }, [inView])
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
 
-  // images seeds for map + ref assignment
-  const seeds = [
-    { src: 'https://picsum.photos/seed/pen1/360/240', alt: 'historic illustration 1' },
-    { src: 'https://picsum.photos/seed/pen2/360/240', alt: 'historic illustration 2' },
-    { src: 'https://picsum.photos/seed/pen3/360/240', alt: 'historic interior' },
-  ]
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      gsap.killTweensOf([bgRef.current, titleRef.current, yearRef.current, scribbleRef.current]);
+    };
+  }, []);
 
   return (
-    <div className="min-w-[90vw] w-full bg-[#f1eada] h-full">
-      <div
-        ref={containerRef}
-        className={`relative h-full flex flex-col items-center justify-center text-black p-8 ${inView ? '' : 'opacity-0'}`}
-      >
-        {/* main hero heading */}
-        <h1
-          ref={h1Ref}
-          className="text-[3.5rem] md:text-[6rem] lg:text-[6rem] font-extrabold leading-none text-center -tracking-tighter select-none"
+    <section
+      ref={sectionRef}
+      className="relative min-w-[150vw] w-full min-h-screen flex bg-black"
+    >
+      {isOpen &&
+        <ViewModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          title="Quiz Time!"
         >
-          Bối cảnh kinh tế - xã hội
-          <br />
-          trước cải cách
-        </h1>
+          <div className="p-6 w-full">
+            <h2 className="text-2xl font-bold mb-4">Thất bại của cuộc cải cách "giá - lương - tiền" năm 1985 (biểu hiện qua sự kiện đổi tiền hỗn loạn) được xem là nguyên nhân trực tiếp và quyết định nhất thúc đẩy Đại hội VI (12/1986) phải thông qua chủ trương cốt lõi nào của Đường lối Đổi Mới?</h2>
 
-        {/* decorative scribble top-right */}
-        <svg
-          ref={scribbleRef}
-          className="absolute top-10 right-12 w-16 h-12 text-[#e94b59] opacity-90"
-          viewBox="0 0 100 60"
-          fill="none"
-        >
-          <path d="M5 40 C20 10, 40 10, 60 30 S90 50, 95 20" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                A. Chấm dứt cơ chế tập trung quan liêu bao cấp, chuyển sang phát triển kinh tế hàng hóa nhiều thành phần.
+              </button>
 
-        {/* three image thumbnails */}
-        <div className="flex gap-6 my-8 items-center justify-center">
-          {seeds.map((s, i) => (
-            <figure
-              key={s.src}
-              ref={(el: any) => (imagesRef.current[i] = el)}
-              className="w-36 md:w-56 bg-white/90 border border-black/10 shadow-sm"
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                B. Phải đặt mục tiêu xây dựng nền quốc phòng toàn dân gắn liền với an ninh nhân dân.
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                C. Phát triển nông nghiệp là mặt trận hàng đầu và áp dụng Khoán 10 trong nông nghiệp.
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                D. Đẩy mạnh công tác xây dựng Đảng vững mạnh về chính trị, tư tưởng và tổ chức.
+              </button>
+            </div>
+          </div>
+        </ViewModal>
+      }
+      <div className="relative w-[100vw] flex items-center bg-gradient-to-r from-[#e94b59] to-green-900/40">
+        <div
+          ref={bgRef}
+          role="presentation"
+          aria-hidden={true}
+          className="absolute inset-0 bg-cover bg-center z-[10] filter brightness-75 contrast-75 pointer-events-none"
+          style={{ backgroundImage: "url('/images/section5.2.png')", willChange: "transform" }}
+        />
+
+        {isQuiz &&
+          <img
+            src="/images/circle.gif"
+            className="absolute top-24 right-24 z-[20] pointer-events-none"
+          />
+        }
+
+        {isQuiz &&
+          <div className="absolute w-[300px] h-[60px] top-[120px] right-[140px] z-[20]" onClick={() => setIsOpen(true)} />
+        }
+
+        <div className="absolute z-[99] w-[92%] max-w-[1100px] text-center left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white">
+          <h1
+            ref={titleRef}
+            className="mt-4 font-extrabold leading-[1.2] text-[clamp(36px,8vw,110px)] tracking-[-0.08em] uppercase text-[#f2eadf] relative max-w-[1100px] drop-shadow-[0_6px_18px_rgba(0,0,0,0.7)]"
+            style={{ willChange: "transform" }}
+          >
+            Ba trụ cột của
+            <br />
+            chính sách
+            <span
+              className="block absolute left-1/2 -translate-x-1/2 bottom-[-18px] w-[86%] h-[36px] pointer-events-none"
+              aria-hidden
             >
-              <img src={s.src} alt={s.alt} className="w-full h-auto object-cover" />
-            </figure>
-          ))}
+              <svg viewBox="0 0 400 40" preserveAspectRatio="none" className="w-full h-full">
+                <path
+                  ref={scribbleRef}
+                  d="M10 20 C50 10, 90 30, 130 18 C170 6, 210 30, 250 18 C290 6, 330 30, 390 20"
+                  stroke="#e24b5a"
+                  strokeWidth="6"
+                  fill="none"
+                  strokeLinecap="round"
+                  style={{ willChange: "transform" }}
+                />
+              </svg>
+            </span>
+          </h1>
         </div>
-        <div ref={inViewRef} />
-
-        {/* large bottom heading */}
-        <h2
-          ref={h2Ref}
-          className="mt-6 text-[2.5rem] font-extrabold leading-[1.4] text-center select-none"
-        >
-          Sau năm 1975, Việt Nam áp dụng mô hình kinh tế kế hoạch hóa tập trung bao cấp, trong đó Nhà nước kiểm soát giá cả, tiền lương và phân phối hàng hóa. Hàng tiêu dùng được cấp phát bằng
-          <span className={cn(isQuiz ? "text-red-500" : "text-inherit")}> tem phiếu</span>
-          , tiền lương không phản ánh giá trị thực do giá cả thấp và khan hiếm hàng hóa.
-        </h2>
-
-        {/* small red accent near bottom text */}
-        <svg
-          ref={accentRef}
-          className="absolute bottom-20 left-3 w-10 h-10 text-[#e94b59]"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path d="M3 12c4 6 10 6 18 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
       </div>
-    </div>
-  )
-}
+      <div className="w-[100vw] h-screen flex items-center justify-center bg-green-900/40 relative">
+        <img src="/images/hand.gif" className="absolute top-12 right-20" />
+        <div className="flex flex-1">
+          <p className="text-xl w-[300px] min-w-[300px]">{`"`}Mục tiêu cốt lõi của cải cách là nhằm xóa bỏ cơ chế tập trung quan liêu bao cấp về giá cả, tiền lương và tiền tệ, để chuyển sang cơ chế hạch toán kinh doanh xã hội chủ nghĩa.{`"`}</p>
+          <img src="/images/arrow.gif" className="mx-auto rotate-180" />
+        </div>
+        <SwapNote
+          titles={["Về Giá Cả", "Về Lương bổng", "Về Tiền Tệ"]}
+          notes={[
+            "1. Xóa bỏ cơ chế hai giá: Chuyển sang thực hiện chế độ một giá trong toàn bộ hệ thống kinh tế quốc dân. \n2. Giá tính đủ chi phí: Xác định lại giá cả các mặt hàng theo nguyên tắc giá phải tính đủ chi phí sản xuất, kinh doanh hợp lý, đảm bảo doanh nghiệp có lãi và có tích lũy.",
+            "1. Bù giá vào lương: Thực hiện tăng lương để bù đắp vào phần giá cả mới được xác định, nhằm đảm bảo người ăn lương có thể sống chủ yếu bằng tiền lương (tái sản xuất sức lao động). \n2. Cải cách thang bảng lương: Điều chỉnh lại thang bảng lương cho công nhân, viên chức và lực lượng vũ trang.",
+            "1. Ổn định lưu thông tiền tệ: Thu hồi tiền cũ và phát hành tiền mới để đáp ứng nhu cầu thanh toán của giá mới và lương mới. \n2. Đổi tiền: Chủ trương đổi tiền với tỉ lệ: 10 đồng tiền cũ đổi lấy 1 đồng tiền mới."
+          ]}
+        />
+      </div>
+    </section>
+  );
+};
 
-export default SectionChild2
+export default SectionChild2;

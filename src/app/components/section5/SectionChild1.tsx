@@ -89,7 +89,7 @@ const SectionChild1 = () => {
     }
   }, [])
   return (
-    <div className="min-w-[100vw] w-full bg-[#e94b59] border-t border-black">
+    <div className="min-w-[80vw] w-full bg-[#e94b59] border-t border-black">
       <div className="relative h-screen flex flex-col items-center justify-center text-black">
         <div
           ref={topRef}

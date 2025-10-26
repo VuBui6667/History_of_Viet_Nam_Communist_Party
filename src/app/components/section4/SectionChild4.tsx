@@ -51,30 +51,34 @@ const SectionChild4: React.FC = () => {
   }, [inView])
 
   return (
-    <section ref={sectionRef} className="w-[100vw] min-w-[100vw] h-screen flex relative bg-[#f1eada]">
+    <section ref={sectionRef} className="w-full min-w-[100vw] h-screen flex relative bg-[#e94b59]">
+      <img
+        src="/images/section4.4.png"
+        className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] rounded-l-xl"
+      />
       {/* LEFT PANEL */}
       <div className={cn("relative w-full overflow-hidden px-12 py-8 flex flex-col", inView ? "" : "opacity-0")} ref={triggerRef}>
         {/* Big title */}
         <div className="mt-4">
-          <h1
-            className="js-title text-black font-extrabold leading-[1.2] tracking-tight"
-            style={{ fontSize: "clamp(3rem, 7vw, 8.5rem)" }}
-          >
-            Lý do lựa chọn cải cách
-            <br />
-            <span className={cn(isQuiz ? "text-red-500" : "text-amber-500")} onClick={() => {
-              if (!isQuiz) return
-              setIsOpen(true)
-            }}>Giá – Lương – Tiền</span>
-          </h1>
+          <div className="flex justify-between">
+            <h1
+              className="js-title text-white font-extrabold leading-[1.2] tracking-tight"
+              style={{ fontSize: "clamp(3rem, 7vw, 8.5rem)" }}
+            >
+              CÁC GIẢI PHÁP
+              <br />
+              SỬA SAI TRỌNG TÂM
+            </h1>
+            <p>1987-1988</p>
+          </div>
 
           {/* barbed wire decorative */}
           <div className="mt-6">
             <div className="flex items-center gap-2 text-black js-barb">
               {/* repeated tiny barbed-wire shapes */}
               <svg width="220" height="18" viewBox="0 0 220 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 9H220" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-                <g stroke="#000000" strokeWidth="2" strokeLinecap="round">
+                <path d="M0 9H220" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+                <g stroke="#fff" strokeWidth="2" strokeLinecap="round">
                   <path d="M20 9l6-4M20 9l6 4M52 9l6-4M52 9l6 4M84 9l6-4M84 9l6 4M116 9l6-4M116 9l6 4M148 9l6-4M148 9l6 4" />
                 </g>
               </svg>
@@ -83,21 +87,13 @@ const SectionChild4: React.FC = () => {
         </div>
 
         {/* bottom caption */}
-        <div className="w-[80%] mt-10 js-caption">
-          <div className="text-black text-xl leading-8">
-            <p className="mb-4">
-              “Giá – Lương – Tiền” là ba trụ cột quan trọng nhất của cơ chế bao cấp. Nếu không thay đổi được nó, sẽ không thể đổi mới phần còn lại của nền kinh tế.
-            </p>
-
-            <p className="font-semibold mb-3">Mục tiêu cải cách lúc bấy giờ gồm:</p>
-
-            <ol className="list-decimal list-inside space-y-3 text-base ml-4">
-              <li>Xóa bỏ cơ chế bao cấp về giá và lương.</li>
-              <li>Tính đủ chi phí vào giá thành, thực hiện cơ chế một giá, không còn giá giả tạo.</li>
-              <li>Trả lương bằng tiền thật, có hàng hóa bảo đảm → khuyến khích người lao động sản xuất.</li>
-              <li>Chuyển ngân hàng sang hạch toán kinh tế, xóa bao cấp tín dụng.</li>
-              <li>Thừa nhận sản xuất hàng hóa và quy luật thị trường trong quản lý kinh tế quốc dân.</li>
-            </ol>
+        <div className="w-[60%] mt-10 js-caption">
+          <div className="text-white text-4xl leading-8">
+            <ul className="list-decimal list-inside space-y-3 text-2xl ml-4">
+              <li>Đột phá Nông nghiệp: Nghị quyết 10-NQ/TW (Khoán 10) (1988) Cho hộ gia đình là đơn vị kinh tế tự chủ. Từ đó chuyển từ thiếu lương thực sang xuất khẩu gạo (1989).</li>
+              <li>TKiềm chế Lạm phát : Biện pháp thắt chặt chi tiêu và tiền tệ tăng cường huy động vốn qua công cụ lãi suất dương (cuối 1988). .</li>
+              <li>Mở cửa Đối ngoại : Luật Đầu tư nước ngoài (1988) mở cửa thu hút vốn, công nghệ từ bên ngoài, phá vỡ thế bao vây cấm vận.</li>
+            </ul>
           </div>
         </div>
       </div>

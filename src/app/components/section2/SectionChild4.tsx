@@ -51,13 +51,13 @@ const SectionChild4: React.FC = () => {
   }, [inView])
 
   return (
-    <section ref={sectionRef} className="w-[100vw] min-w-[100vw] h-screen flex relative bg-[#f1eada]">
+    <section ref={sectionRef} className="w-[100vw] min-w-[100vw] h-screen flex relative bg-black">
       {/* LEFT PANEL */}
-      <div className={cn("relative w-full overflow-hidden px-12 py-8 flex flex-col", inView ? "" : "opacity-0")} ref={triggerRef}>
+      <div className={cn("relative w-full overflow-hidden px-12 py-8 flex flex-col to-[#e94b59]", inView ? "" : "opacity-0")} ref={triggerRef}>
         {/* Big title */}
         <div className="mt-4">
           <h1
-            className="js-title text-black font-extrabold leading-[1.2] tracking-tight"
+            className="js-title text-white font-extrabold leading-[1.2] tracking-tight"
             style={{ fontSize: "clamp(3rem, 7vw, 8.5rem)" }}
           >
             Lý do lựa chọn cải cách
@@ -70,11 +70,11 @@ const SectionChild4: React.FC = () => {
 
           {/* barbed wire decorative */}
           <div className="mt-6">
-            <div className="flex items-center gap-2 text-black js-barb">
+            <div className="flex items-center gap-2 text-white js-barb">
               {/* repeated tiny barbed-wire shapes */}
               <svg width="220" height="18" viewBox="0 0 220 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 9H220" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-                <g stroke="#000000" strokeWidth="2" strokeLinecap="round">
+                <path d="M0 9H220" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+                <g stroke="#fff" strokeWidth="2" strokeLinecap="round">
                   <path d="M20 9l6-4M20 9l6 4M52 9l6-4M52 9l6 4M84 9l6-4M84 9l6 4M116 9l6-4M116 9l6 4M148 9l6-4M148 9l6 4" />
                 </g>
               </svg>
@@ -84,7 +84,7 @@ const SectionChild4: React.FC = () => {
 
         {/* bottom caption */}
         <div className="w-[80%] mt-10 js-caption">
-          <div className="text-black text-xl leading-8">
+          <div className="text-white text-xl leading-8">
             <p className="mb-4">
               “Giá – Lương – Tiền” là ba trụ cột quan trọng nhất của cơ chế bao cấp. Nếu không thay đổi được nó, sẽ không thể đổi mới phần còn lại của nền kinh tế.
             </p>

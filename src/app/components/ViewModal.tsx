@@ -150,7 +150,7 @@ export default function ViewModal({
               <button
                 onClick={onClose}
                 aria-label="Close"
-                className="bg-transparent border-0 cursor-pointer text-xl leading-none p-1 rounded hover:bg-gray-100"
+                className="bg-transparent border-0 cursor-pointer text-3xl leading-none p-1 rounded hover:bg-gray-100"
               >
                 ×
               </button>

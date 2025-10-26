@@ -1,123 +1,198 @@
-import React, { useEffect, useRef } from "react"
-import gsap from "gsap"
-import StickyNote from "./StickyNote"
-import { useInView } from "react-intersection-observer"
-import cn from "@/utils"
+import React, { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import SwapNote from "../SwapNote";
+import { usePathname } from "next/navigation";
+import ViewModal from "../ViewModal";
+import Image from "next/image";
 
-const SectionChild3: React.FC = () => {
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const { ref: triggerRef, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  })
+const SectionChild2: React.FC = () => {
+  const pathname = usePathname()
+  const isQuiz = pathname === '/quiz'
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const bgRef = useRef<HTMLDivElement | null>(null);
+  const yearRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const scribbleRef = useRef<SVGPathElement | null>(null);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!sectionRef.current || !inView) return
+    let ticking = false;
+    const clamp = (v: number, a = -1, b = 1) => Math.max(a, Math.min(b, v));
 
-    const ctx = gsap.context(() => {
-      // Title entrance
-      gsap.from(".js-title", {
-        y: 80,
-        autoAlpha: 0,
-        duration: 1.1,
-        ease: "power3.out",
-        stagger: 0.05,
-      })
+    const onScroll = () => {
+      if (!sectionRef.current) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const rect = sectionRef.current!.getBoundingClientRect();
+          const sectionCenterX = rect.left + rect.width / 2;
+          const viewportCenterX = window.innerWidth / 2;
+          const progress = clamp((sectionCenterX - viewportCenterX) / (window.innerWidth / 2));
 
-      // decorative barbed wire
-      gsap.from(".js-barb", {
-        x: -40,
-        autoAlpha: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        delay: 0.2,
-      })
+          // multipliers increased for visible effect
+          const bgX = progress * 80;
+          const titleX = progress * 160;
+          const yearX = progress * 100;
+          const scribbleX = progress * 110;
+          const scribbleRot = progress * 10;
 
-      // caption lines
-      gsap.from(".js-caption > *", {
-        y: 20,
-        autoAlpha: 0,
-        duration: 0.9,
-        stagger: 0.12,
-        delay: 0.4,
-      })
-    }, sectionRef)
+          if (bgRef.current) {
+            gsap.to(bgRef.current, { x: bgX, ease: "power3.out", overwrite: true, duration: 0.6 });
+          }
+          if (titleRef.current) {
+            gsap.to(titleRef.current, { x: titleX, ease: "power3.out", overwrite: true, duration: 0.6 });
+          }
+          if (yearRef.current) {
+            gsap.to(yearRef.current, { x: yearX, ease: "power3.out", overwrite: true, duration: 0.6 });
+          }
+          if (scribbleRef.current) {
+            gsap.to(scribbleRef.current, {
+              x: scribbleX,
+              rotation: scribbleRot,
+              transformOrigin: "50% 50%",
+              ease: "power3.out",
+              overwrite: true,
+              duration: 0.6,
+            });
+          }
 
-    return () => ctx.revert()
-  }, [inView])
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      gsap.killTweensOf([bgRef.current, titleRef.current, yearRef.current, scribbleRef.current]);
+    };
+  }, []);
 
   return (
-    <section ref={sectionRef} className="w-full min-w-[100vw] h-screen flex relative bg-[#0b0b0b]">
-      {/* LEFT PANEL */}
-      <div className={cn("relative w-3/5 overflow-hidden px-12 py-8 flex flex-col", inView ? "" : "opacity-0")}>
-        {/* Big title */}
-        <div className="mt-4">
-          <h1
-            className="js-title text-[#efe6d0] font-extrabold leading-[1.2] tracking-tight"
-            style={{ fontSize: "clamp(3rem, 7vw, 8.5rem)" }}
-          >
-            Áp Lực Đổi Mới
-            <br />
-            Cơ Chế
-          </h1>
+    <section
+      ref={sectionRef}
+      className="relative min-w-[150vw] w-full min-h-screen flex bg-black"
+    >
+      {isOpen &&
+        <ViewModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          title="Quiz Time!"
+        >
+          <div className="p-6 w-full">
+            <h2 className="text-2xl font-bold mb-4">Thất bại của cuộc cải cách "giá - lương - tiền" năm 1985 (biểu hiện qua sự kiện đổi tiền hỗn loạn) được xem là nguyên nhân trực tiếp và quyết định nhất thúc đẩy Đại hội VI (12/1986) phải thông qua chủ trương cốt lõi nào của Đường lối Đổi Mới?</h2>
 
-          {/* barbed wire decorative */}
-          <div className="mt-6">
-            <div className="flex items-center gap-2 text-[#c64b4b] js-barb">
-              {/* repeated tiny barbed-wire shapes */}
-              <svg width="220" height="18" viewBox="0 0 220 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 9H220" stroke="#c64b4b" strokeWidth="2" strokeLinecap="round" />
-                <g stroke="#c64b4b" strokeWidth="2" strokeLinecap="round">
-                  <path d="M20 9l6-4M20 9l6 4M52 9l6-4M52 9l6 4M84 9l6-4M84 9l6 4M116 9l6-4M116 9l6 4M148 9l6-4M148 9l6 4" />
-                </g>
-              </svg>
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                A. Chấm dứt cơ chế tập trung quan liêu bao cấp, chuyển sang phát triển kinh tế hàng hóa nhiều thành phần.
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                B. Phải đặt mục tiêu xây dựng nền quốc phòng toàn dân gắn liền với an ninh nhân dân.
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                C. Phát triển nông nghiệp là mặt trận hàng đầu và áp dụng Khoán 10 trong nông nghiệp.
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
+              >
+                D. Đẩy mạnh công tác xây dựng Đảng vững mạnh về chính trị, tư tưởng và tổ chức.
+              </button>
             </div>
           </div>
-        </div>
-
-        {/* bottom caption */}
-        <div className="w-[80%] mt-10 js-caption">
-          <div className="text-[#efe6d0] text-xl leading-8">
-            <p className="mb-4">
-              Sau khi thống nhất đất nước năm 1975, Việt Nam lựa chọn xây dựng nền kinh tế theo mô hình kế hoạch hóa tập trung bao cấp.
-            </p>
-
-            <p className="font-semibold mb-3">Trong mô hình này:</p>
-
-            <ul className="list-disc list-inside space-y-3 text-base">
-              <li>Nhà nước kiểm soát toàn bộ giá cả, tiền lương, phân phối hàng hóa.</li>
-              <li>Hầu hết hàng hóa tiêu dùng thiết yếu được cấp phát bằng tem phiếu chứ không mua bán theo giá thị trường.</li>
-              <li>Người lao động nhận lương bằng tiền, nhưng giá cả thấp giả tạo; thiếu hàng hóa nên tiền không phản ánh đúng giá trị thực.</li>
-            </ul>
-
-            <p className="mt-4 italic font-semibold">Và bước đột phá được chọn chính là: giá – lương – tiền.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* RIGHT PANEL */}
-      <div className="relative w-2/5" ref={triggerRef}>
-        {/* background image (replace url with your image) */}
+        </ViewModal>
+      }
+      <div className="relative w-[100vw] flex items-center bg-gradient-to-r from-green-900/40 to-green-900/40">
         <div
-          className="absolute inset-0 bg-cover bg-center filter grayscale contrast-90"
-          style={{
-            backgroundImage: "url('/images/prison.jpg')",
-            mixBlendMode: "multiply",
-            backgroundColor: "#1e5b3a",
-          }}
-          aria-hidden
+          ref={bgRef}
+          role="presentation"
+          aria-hidden={true}
+          className="absolute inset-0 bg-cover bg-center z-[10] filter brightness-75 contrast-75 pointer-events-none"
+          style={{ backgroundImage: "url('/images/section4.3.webp')", willChange: "transform" }}
         />
 
-        {/* green overlay to match tonal look */}
-        <div className="absolute inset-0 bg-green-900/40" />
+        {isQuiz &&
+          <img
+            src="/images/circle.gif"
+            className="absolute top-24 right-24 z-[20] pointer-events-none"
+          />
+        }
 
-        {/* stack of sticky notes */}
+        {isQuiz &&
+          <div className="absolute w-[300px] h-[60px] top-[120px] right-[140px] z-[20]" onClick={() => setIsOpen(true)} />
+        }
+
+        <div className="absolute z-[99] w-[92%] max-w-[1100px] text-center left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white">
+          <div className="mb-2">
+            <div
+              ref={yearRef}
+              className="text-2xl font-bold tracking-wide opacity-95"
+              style={{ willChange: "transform" }}
+            >
+              ĐẠI HỘI VI (12/1986)
+            </div>
+          </div>
+
+          <h1
+            ref={titleRef}
+            className="mt-4 font-extrabold leading-[1.2] text-[clamp(36px,8vw,110px)] tracking-[-0.08em] uppercase text-[#f2eadf] relative max-w-[1100px] drop-shadow-[0_6px_18px_rgba(0,0,0,0.7)]"
+            style={{ willChange: "transform" }}
+          >
+            KHỞI XƯỚNG ĐƯỜNG LỐI
+            <br />
+            ĐỔI MỚI TOÀN DIỆN
+            <span
+              className="block absolute left-1/2 -translate-x-1/2 bottom-[-18px] w-[86%] h-[36px] pointer-events-none"
+              aria-hidden
+            >
+              <svg viewBox="0 0 400 40" preserveAspectRatio="none" className="w-full h-full">
+                <path
+                  ref={scribbleRef}
+                  d="M10 20 C50 10, 90 30, 130 18 C170 6, 210 30, 250 18 C290 6, 330 30, 390 20"
+                  stroke="#e24b5a"
+                  strokeWidth="6"
+                  fill="none"
+                  strokeLinecap="round"
+                  style={{ willChange: "transform" }}
+                />
+              </svg>
+            </span>
+          </h1>
+        </div>
       </div>
-      {inView &&
-        <StickyNote />
-      }
+      <div className="w-[50vw] h-screen flex items-center justify-center bg-green-900/40 relative">
+        <img src="/images/hand.gif" className="absolute top-12 right-20" />
+        <div className="max-w-[40rem] px-8 py-12 text-[#f2eadf]">
+          <ul className="list-disc list-inside space-y-4 text-2xl leading-relaxed">
+            <li className="font-semibold">Tự phê bình nghiêm túc: nhìn thẳng vào sự thật, chỉ rõ những sai lầm chủ quan, duy ý chí kéo dài (1975-1986).</li>
+            <li>Chấm dứt cơ chế bao cấp: xóa bỏ cơ chế tập trung quan liêu hành chính bao cấp.</li>
+            <li>Chuyển sang kinh tế hàng hóa nhiều thành phần: vận hành theo cơ chế thị trường có sự quản lý của Nhà nước.</li>
+          </ul>
+        </div>
+      </div>
     </section>
-  )
-}
+  );
+};
 
-export default SectionChild3
+export default SectionChild2;
