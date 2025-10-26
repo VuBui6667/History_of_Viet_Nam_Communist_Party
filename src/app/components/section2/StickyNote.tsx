@@ -22,7 +22,7 @@ const StickyNote: React.FC = () => {
       gsap.from(noteRefs.current, {
         y: -200,
         opacity: 0,
-        rotation: (i) => randomInt(-12, 12),
+        rotation: () => randomInt(-12, 12),
         duration: 1.2,
         ease: "bounce.out",
         stagger: 0.12,

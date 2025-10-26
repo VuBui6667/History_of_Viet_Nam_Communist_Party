@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { useInView } from "react-intersection-observer"
 import cn from "@/utils"
@@ -6,11 +6,7 @@ import cn from "@/utils"
 const SectionChild3: React.FC = () => {
   const sectionRef = useRef<HTMLElement | null>(null)
   const leftRef = useRef<HTMLDivElement | null>(null)
-  const imgRef = useRef<HTMLImageElement | null>(null)
   const rafRef = useRef<number | null>(null)
-  const target = useRef({ x: 0, y: 0 })
-  const pos = useRef({ x: 0, y: 0 })
-  const [hovering, setHovering] = useState(false)
 
   const { ref: triggerRef, inView } = useInView({
     threshold: 0.1,
@@ -51,81 +47,6 @@ const SectionChild3: React.FC = () => {
 
     return () => ctx.revert()
   }, [inView])
-
-  // Smooth follow loop
-  const loop = () => {
-    pos.current.x += (target.current.x - pos.current.x) * 0.18
-    pos.current.y += (target.current.y - pos.current.y) * 0.18
-
-    if (imgRef.current) {
-      imgRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px) translate(-50%, -50%)`
-    }
-
-    // stop loop when near target and not hovering
-    const dx = Math.abs(target.current.x - pos.current.x)
-    const dy = Math.abs(target.current.y - pos.current.y)
-    if (!hovering && dx < 0.5 && dy < 0.5) {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-        rafRef.current = null
-      }
-      return
-    }
-
-    rafRef.current = requestAnimationFrame(loop)
-  }
-
-  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    const rect = leftRef.current?.getBoundingClientRect()
-    if (!rect || !imgRef.current) return
-
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    // if the RAF loop was running, stop it to avoid conflicting transforms
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current)
-      rafRef.current = null
-    }
-
-    // Smooth, delayed follow using GSAP — animate the target ref and apply transform on each tick
-    gsap.to(target.current, {
-      x,
-      y,
-      duration: 1.2,
-      ease: "power3.out",
-      overwrite: true,
-      onUpdate: () => {
-        if (imgRef.current) {
-          imgRef.current.style.transform = `translate(${target.current.x}px, ${target.current.y}px) translate(-50%, -50%)`
-        }
-      },
-    })
-  }
-
-  const handleMouseEnter = () => {
-    setHovering(true)
-    if (imgRef.current) {
-      imgRef.current.style.opacity = "1"
-      imgRef.current.style.transition = "opacity 200ms ease"
-    }
-    if (!rafRef.current) {
-      rafRef.current = requestAnimationFrame(loop)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setHovering(false)
-    if (imgRef.current) {
-      imgRef.current.style.opacity = "0"
-    }
-    // loop will stop itself when settled; or cancel after a small timeout
-    if (rafRef.current) {
-      // keep running briefly so it eases out; optional: cancel immediately
-      // cancelAnimationFrame(rafRef.current)
-      // rafRef.current = null
-    }
-  }
 
   useEffect(() => {
     return () => {
@@ -217,7 +138,7 @@ const SectionChild3: React.FC = () => {
               <span className="inline-block font-bold mr-1">
                 Cách thức tiến hành thực tế:
               </span>
-              Để thực hiện "bù giá vào lương" (lương tăng 100% so với kế hoạch ban đầu), Nhà nước buộc phải in thêm một khối lượng tiền lớn vượt xa khả năng cung ứng hàng hóa.
+              Để thực hiện &quot;bù giá vào lương&quot; (lương tăng 100% so với kế hoạch ban đầu), Nhà nước buộc phải in thêm một khối lượng tiền lớn vượt xa khả năng cung ứng hàng hóa.
             </div>
             <div className="mb-4 inline-block font-light">
               <span className="inline-block font-bold mr-1">

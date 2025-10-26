@@ -5,9 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import Section1 from "./components/section1/Section1";
-import dynamic from "next/dynamic";
 import Section5 from "./components/section5/Section5";
-import useScreenSize from "@/hooks/use-screen-size";
 import Section2 from "./components/section2/Section2";
 import Section3 from "./components/section3/Section2";
 import Section4 from "./components/section4/Section4";
@@ -19,8 +17,6 @@ import Section4 from "./components/section4/Section4";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 export default function ScrollHorizontalPage() {
-  const screenSize = useScreenSize()
-
   useEffect(() => {
     const smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",

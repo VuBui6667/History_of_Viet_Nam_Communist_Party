@@ -1,6 +1,5 @@
 "use client";
-import PixelTrail from "@/components/fancy/background/pixel-trail";
-import useScreenSize from "@/hooks/use-screen-size";
+
 import React, { useEffect, useRef } from "react";
 
 const Main = ({
@@ -8,7 +7,6 @@ const Main = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const screenSize = useScreenSize()
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -82,16 +80,13 @@ const Main = ({
     window.addEventListener("mouseup", onMouseUp);
 
     // touch fallback: update target positions and show/hide
-    let touchActive = false;
     const onTouchMove = (e: TouchEvent) => {
-      touchActive = true;
       const t = e.touches[0];
       targetX.current = t.clientX;
       targetY.current = t.clientY;
       cursor.style.display = "block";
     };
     const onTouchEnd = () => {
-      touchActive = false;
       cursor.style.display = "none";
     };
     window.addEventListener("touchmove", onTouchMove, { passive: true });

@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import SwapNote from "../SwapNote";
 import { usePathname } from "next/navigation";
 import ViewModal from "../ViewModal";
-import Image from "next/image";
 
 const SectionChild2: React.FC = () => {
   const pathname = usePathname()
@@ -85,7 +83,7 @@ const SectionChild2: React.FC = () => {
           title="Quiz Time!"
         >
           <div className="p-6 w-full">
-            <h2 className="text-2xl font-bold mb-4">Thất bại của cuộc cải cách "giá - lương - tiền" năm 1985 (biểu hiện qua sự kiện đổi tiền hỗn loạn) được xem là nguyên nhân trực tiếp và quyết định nhất thúc đẩy Đại hội VI (12/1986) phải thông qua chủ trương cốt lõi nào của Đường lối Đổi Mới?</h2>
+            <h2 className="text-2xl font-bold mb-4">Thất bại của cuộc cải cách &quot;giá - lương - tiền&quot; năm 1985 (biểu hiện qua sự kiện đổi tiền hỗn loạn) được xem là nguyên nhân trực tiếp và quyết định nhất thúc đẩy Đại hội VI (12/1986) phải thông qua chủ trương cốt lõi nào của Đường lối Đổi Mới?</h2>
 
             <div className="space-y-3">
               <button

@@ -5,8 +5,6 @@ import cn from "@/utils"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import ViewModal from "../ViewModal"
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, useTexture } from '@react-three/drei'
 import MoneyCard3D from "../MoneyCard3D"
 
 const SectionChild3: React.FC = () => {
