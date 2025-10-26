@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type Size = "sm" | "md" | "lg" | "full";
@@ -23,7 +23,7 @@ const sizeClasses: Record<Size, string> = {
   full: "w-full h-full max-w-full rounded-none",
 };
 
-export default function ViewModal({
+function ViewModal({
   isOpen,
   onClose,
   title,
@@ -167,3 +167,5 @@ export default function ViewModal({
 
   return typeof document !== "undefined" ? createPortal(modal, document.body) : null;
 }
+
+export default memo(ViewModal);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -9,10 +9,15 @@ import Section2 from "../components/section2/Section2";
 import Section5 from "../components/section5/Section5";
 import Section3 from "../components/section3/Section2";
 import Section4 from "../components/section4/Section4";
+import ViewModal from "../components/ViewModal";
+import { useFirstRender } from "@/hooks/useFirstRender";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 export default function ScrollHorizontalPage() {
+  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const refName = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
@@ -62,81 +67,120 @@ export default function ScrollHorizontalPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    if (username) {
+      setIsOpen(false);
+    }
+  }, [])
+
   return (
-    <div id="smooth-wrapper">
-      <div id="smooth-content">
-        {/* SECTION 1 — vertical */}
-        <Section1 />
-
-        {/* HORIZONTAL GROUP 1 — Section 2 */}
-        <div className="horizontal-wrapper relative h-screen overflow-hidden">
-          <div className="horizontal-container flex h-screen">
-            {/* Each child must be full viewport width (w-screen) so container width = sum of children */}
-            <Section2 />
-          </div>
-        </div>
-
-        {/* HORIZONTAL GROUP 1 — Section 5 */}
-        <div className="horizontal-wrapper relative h-screen overflow-hidden">
-          <div className="horizontal-container flex h-screen">
-            {/* Each child must be full viewport width (w-screen) so container width = sum of children */}
-            <Section5 />
-          </div>
-        </div>
-
-        {/* HORIZONTAL GROUP 2 — behaves the same (scroll horizontal inside this group) */}
-        <div className="horizontal-wrapper relative h-screen overflow-hidden">
-          <div className="horizontal-container flex h-screen">
-            <Section3 />
-          </div>
-        </div>
-
-        {/* HORIZONTAL GROUP 3 — behaves the same (scroll horizontal inside this group) */}
-        <div className="horizontal-wrapper relative h-screen overflow-hidden">
-          <div className="horizontal-container flex h-screen">
-            <Section4 />
-          </div>
-        </div>
-
-
-
-        {/* FINAL SECTION — vertical */}
-        <section className="relative h-screen">
-          {/* Background Pattern */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#e94b59_100%)]"></div>
-          </div>
-
-          {/* Hero Content */}
-          <div className="relative z-10 flex h-full flex-col items-center justify-center px-4">
-            <div className="max-w-3xl text-center">
-              <h1 className="mb-8 text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-black">
-                <span className="text-[#e94b59]">Hoàn Thành!</span>
-              </h1>
-              <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-700">
-                Bạn đã hoàn thành học phần. Chúc mừng và cảm ơn vì đã đồng hành cùng chúng tôi!
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <button className="rounded-lg px-6 py-3 font-medium bg-[#e94b59] text-white hover:bg-red-600" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-                  Học lại
-                </button>
-                <button className="rounded-lg border px-6 py-3 font-medium border-slate-200 bg-white text-slate-900 hover:bg-slate-50" onClick={() =>
-                  navigator.share
-                    ? navigator.share({
-                      title: "Hoàn thành",
-                      text: "Mình vừa hoàn thành phần nội dung!",
-                      url: window.location.href,
-                    })
-                    : alert("Sao chép link: " + window.location.href)
-                }>
-                  Chia sẻ
-                </button>
-              </div>
+    <>
+      {isOpen &&
+        <ViewModal showCloseButton={false} closeOnBackdropClick={false} title="QUIZ TIME!" isOpen onClose={() => setIsOpen(true)}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (refName?.current?.value) {
+                localStorage.setItem("username", refName?.current?.value);
+                setIsOpen(false);
+              }
+            }}
+            className="p-6"
+          >
+            <label className="mb-2 block text-sm font-medium text-gray-700">Mã số sinh viên của bạn</label>
+            <input
+              ref={refName}
+              type="text"
+              name="username"
+              // onChange={(e) => setUsername(e.target.value)}
+              placeholder="Nhập MSSV..."
+              autoFocus
+              className="w-full rounded-md border px-3 py-2"
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button type="submit" className="rounded bg-[#e94b59] px-4 py-2 text-white">
+                Lưu
+              </button>
             </div>
-            <p className="mt-6 text-sm opacity-90">— Trân trọng, VNR202 • Group 5 —</p>
+          </form>
+        </ViewModal>
+      }
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          {/* SECTION 1 — vertical */}
+          <Section1 />
+
+          {/* HORIZONTAL GROUP 1 — Section 2 */}
+          <div className="horizontal-wrapper relative h-screen overflow-hidden">
+            <div className="horizontal-container flex h-screen">
+              {/* Each child must be full viewport width (w-screen) so container width = sum of children */}
+              <Section2 />
+            </div>
           </div>
-        </section>
+
+          {/* HORIZONTAL GROUP 1 — Section 5 */}
+          <div className="horizontal-wrapper relative h-screen overflow-hidden">
+            <div className="horizontal-container flex h-screen">
+              {/* Each child must be full viewport width (w-screen) so container width = sum of children */}
+              <Section5 />
+            </div>
+          </div>
+
+          {/* HORIZONTAL GROUP 2 — behaves the same (scroll horizontal inside this group) */}
+          <div className="horizontal-wrapper relative h-screen overflow-hidden">
+            <div className="horizontal-container flex h-screen">
+              <Section3 />
+            </div>
+          </div>
+
+          {/* HORIZONTAL GROUP 3 — behaves the same (scroll horizontal inside this group) */}
+          <div className="horizontal-wrapper relative h-screen overflow-hidden">
+            <div className="horizontal-container flex h-screen">
+              <Section4 />
+            </div>
+          </div>
+
+
+
+          {/* FINAL SECTION — vertical */}
+          <section className="relative h-screen">
+            {/* Background Pattern */}
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#e94b59_100%)]"></div>
+            </div>
+
+            {/* Hero Content */}
+            <div className="relative z-10 flex h-full flex-col items-center justify-center px-4">
+              <div className="max-w-3xl text-center">
+                <h1 className="mb-8 text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-black">
+                  <span className="text-[#e94b59]">Hoàn Thành!</span>
+                </h1>
+                <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-700">
+                  Bạn đã hoàn thành học phần. Chúc mừng và cảm ơn vì đã đồng hành cùng chúng tôi!
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <button className="rounded-lg px-6 py-3 font-medium bg-[#e94b59] text-white hover:bg-red-600" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+                    Học lại
+                  </button>
+                  <button className="rounded-lg border px-6 py-3 font-medium border-slate-200 bg-white text-slate-900 hover:bg-slate-50" onClick={() =>
+                    navigator.share
+                      ? navigator.share({
+                        title: "Hoàn thành",
+                        text: "Mình vừa hoàn thành phần nội dung!",
+                        url: window.location.href,
+                      })
+                      : alert("Sao chép link: " + window.location.href)
+                  }>
+                    Chia sẻ
+                  </button>
+                </div>
+              </div>
+              <p className="mt-6 text-sm opacity-90">— Trân trọng, VNR202 • Group 5 —</p>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

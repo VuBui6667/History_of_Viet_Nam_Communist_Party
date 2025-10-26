@@ -3,6 +3,8 @@ import gsap from "gsap";
 import SwapNote from "../SwapNote";
 import { usePathname } from "next/navigation";
 import ViewModal from "../ViewModal";
+import { onSubmitQuiz } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 const SectionChild2: React.FC = () => {
   const pathname = usePathname()
@@ -72,6 +74,46 @@ const SectionChild2: React.FC = () => {
     };
   }, []);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmitQuiz = async (answerType: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const toastId = toast.loading("Đang gửi câu trả lời...");
+
+    try {
+      const username = localStorage.getItem("username") || "Guest";
+      const isScored = answerType === "C";
+      const data = await onSubmitQuiz({
+        username,
+        quizId: 4,
+        isScored,
+      });
+
+      // close the loading toast before showing the result toast
+      toast.dismiss(toastId);
+
+      if (data.error) {
+        toast.error(`Có lỗi xảy ra: ${data.error}`);
+      } else {
+        if (isScored) {
+          toast.success("Chúc mừng! Bạn đã trả lời đúng câu hỏi.");
+        } else {
+          toast.warning("Rất tiếc! Câu trả lời của bạn chưa chính xác.");
+        }
+      }
+
+      setIsOpen(false);
+    } catch (err) {
+      toast.dismiss(toastId);
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <section
       ref={sectionRef}
@@ -89,7 +131,7 @@ const SectionChild2: React.FC = () => {
             <div className="space-y-3">
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("A")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 A. Bài học về việc phải kết hợp hài hòa kế hoạch với thị trường.
@@ -97,7 +139,7 @@ const SectionChild2: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("B")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 B. Bài học về việc phải tôn trọng quy luật kinh tế khách quan và giải phóng sản xuất.
@@ -105,7 +147,7 @@ const SectionChild2: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("C")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 C. Bài học về việc phải thực hiện cải cách một cách đồng bộ và có bước đi thận trọng.
@@ -113,7 +155,7 @@ const SectionChild2: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("D")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 D. Bài học về việc kiềm chế lạm phát phải là ưu tiên hàng đầu bằng công cụ kinh tế.

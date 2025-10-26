@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
 import { useInView } from "react-intersection-observer"
 import cn from "@/utils"
-import { usePathname } from "next/navigation"
+// import { usePathname } from "next/navigation"
 import ViewModal from "../ViewModal"
 
 const SectionChild4: React.FC = () => {
-  const pathname = usePathname()
-  const isQuiz = pathname === '/quiz'
+  // const pathname = usePathname()
+  const isQuiz = false
   const sectionRef = useRef<HTMLElement | null>(null)
   const { ref: triggerRef, inView } = useInView({
     threshold: 0.5,
@@ -103,7 +103,7 @@ const SectionChild4: React.FC = () => {
       </div>
       {isOpen &&
         <ViewModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <div className="p-4 h-[500px]">
+          <div className="p-6">
             <h2 className="text-lg font-bold">Chi tiết</h2>
             <p className="mt-2">Nội dung chi tiết về lý do lựa chọn cải cách.</p>
           </div>

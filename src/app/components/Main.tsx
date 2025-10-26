@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { ToastContainer } from 'react-toastify';
 
 const Main = ({
   children,
@@ -114,6 +115,7 @@ const Main = ({
       </div> */}
       {children}
       <div ref={cursorRef} aria-hidden />
+      <ToastContainer />
     </div>
   );
 };

@@ -3,6 +3,8 @@ import gsap from "gsap";
 import SwapNote from "../SwapNote";
 import { usePathname } from "next/navigation";
 import ViewModal from "../ViewModal";
+import { onSubmitQuiz } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 const SectionChild2: React.FC = () => {
   const pathname = usePathname()
@@ -72,6 +74,46 @@ const SectionChild2: React.FC = () => {
     };
   }, []);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmitQuiz = async (answerType: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const toastId = toast.loading("Đang gửi câu trả lời...");
+
+    try {
+      const username = localStorage.getItem("username") || "Guest";
+      const isScored = answerType === "D";
+      const data = await onSubmitQuiz({
+        username,
+        quizId: 2,
+        isScored,
+      });
+
+      // close the loading toast before showing the result toast
+      toast.dismiss(toastId);
+
+      if (data.error) {
+        toast.error(`Có lỗi xảy ra: ${data.error}`);
+      } else {
+        if (isScored) {
+          toast.success("Chúc mừng! Bạn đã trả lời đúng câu hỏi.");
+        } else {
+          toast.warning("Rất tiếc! Câu trả lời của bạn chưa chính xác.");
+        }
+      }
+
+      setIsOpen(false);
+    } catch (err) {
+      toast.dismiss(toastId);
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <section
       ref={sectionRef}
@@ -84,39 +126,43 @@ const SectionChild2: React.FC = () => {
           title="Quiz Time!"
         >
           <div className="p-6 w-full">
-            <h2 className="text-2xl font-bold mb-4">Thất bại của cuộc cải cách &quot;giá - lương - tiền&quot; năm 1985 (biểu hiện qua sự kiện đổi tiền hỗn loạn) được xem là nguyên nhân trực tiếp và quyết định nhất thúc đẩy Đại hội VI (12/1986) phải thông qua chủ trương cốt lõi nào của Đường lối Đổi Mới?</h2>
+            <h2 className="text-2xl font-bold mb-4">Sai lầm nghiêm trọng nhất trong cách thức tiến hành cuộc tổng điều chỉnh giá – lương – tiền năm 1985 là gì, mà trực tiếp dẫn đến lạm phát phi mã và hỗn loạn kinh tế?</h2>
 
             <div className="space-y-3">
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("A")}
+                disabled={isLoading}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
-                A. Chấm dứt cơ chế tập trung quan liêu bao cấp, chuyển sang phát triển kinh tế hàng hóa nhiều thành phần.
+                A. Chủ trương xóa bỏ cơ chế hai giá, vì không tính toán hết được sự chênh lệch lớn giữa giá Nhà nước và giá thị trường.
               </button>
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("B")}
+                disabled={isLoading}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
-                B. Phải đặt mục tiêu xây dựng nền quốc phòng toàn dân gắn liền với an ninh nhân dân.
+                B. Quy định mức tăng lương quá thấp so với đà tăng giá vật tư đầu vào, khiến đời sống công nhân viên chức không đảm bảo.
               </button>
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("C")}
+                disabled={isLoading}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
-                C. Phát triển nông nghiệp là mặt trận hàng đầu và áp dụng Khoán 10 trong nông nghiệp.
+                C. Quyết định hạn mức đổi tiền tối đa cho mỗi gia đình, gây thiệt hại lớn cho những hộ có tiền tiết kiệm
               </button>
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("D")}
+                disabled={isLoading}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
-                D. Đẩy mạnh công tác xây dựng Đảng vững mạnh về chính trị, tư tưởng và tổ chức.
+                D. Vội vàng đổi tiền và in thêm tiền lớn để bù giá vào lương, do đó vi phạm nguyên tắc cơ bản là tiền tệ phát hành phải có hàng hóa đối ứng.
               </button>
             </div>
           </div>
@@ -134,12 +180,12 @@ const SectionChild2: React.FC = () => {
         {isQuiz &&
           <img
             src="/images/circle.gif"
-            className="absolute top-24 right-24 z-[20] pointer-events-none"
+            className="absolute bottom-[200px] left-[100px] z-[20] pointer-events-none w-80"
           />
         }
 
         {isQuiz &&
-          <div className="absolute w-[300px] h-[60px] top-[120px] right-[140px] z-[20]" onClick={() => setIsOpen(true)} />
+          <div className="absolute w-[200px] h-[200px] bottom-[160px] left-[140px] z-[999]" onClick={() => setIsOpen(true)} />
         }
 
         <div className="absolute z-[99] w-[92%] max-w-[1100px] text-center left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white">

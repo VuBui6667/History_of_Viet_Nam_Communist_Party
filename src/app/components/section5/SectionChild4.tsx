@@ -4,17 +4,29 @@ import { useInView } from "react-intersection-observer"
 import cn from "@/utils"
 
 const SectionChild3: React.FC = () => {
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const leftRef = useRef<HTMLDivElement | null>(null)
-  const rafRef = useRef<number | null>(null)
+  const sectionRef1 = useRef<HTMLDivElement | null>(null)
 
-  const { ref: triggerRef, inView } = useInView({
+  const sectionRef2 = useRef<HTMLDivElement | null>(null)
+
+  const sectionRef3 = useRef<HTMLDivElement | null>(null)
+
+  const { ref: triggerRef1, inView: inView1 } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  })
+
+  const { ref: triggerRef2, inView: inView2 } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  })
+
+  const { ref: triggerRef3, inView: inView3 } = useInView({
     threshold: 0.1,
     triggerOnce: true,
   })
 
   useEffect(() => {
-    if (!sectionRef.current || !inView) return
+    if (!sectionRef1.current || !inView1) return
 
     const ctx = gsap.context(() => {
       // Title entrance
@@ -43,25 +55,88 @@ const SectionChild3: React.FC = () => {
         stagger: 0.12,
         delay: 0.4,
       })
-    }, sectionRef)
+    }, sectionRef1)
 
     return () => ctx.revert()
-  }, [inView])
+  }, [inView1])
 
   useEffect(() => {
-    return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
-    }
-  }, [])
+    if (!sectionRef2.current || !inView2) return
+
+    const ctx = gsap.context(() => {
+      // Title entrance
+      gsap.from(".js-title", {
+        y: 80,
+        autoAlpha: 0,
+        duration: 1.1,
+        ease: "power3.out",
+        stagger: 0.05,
+      })
+
+      // decorative barbed wire
+      gsap.from(".js-barb", {
+        x: -40,
+        autoAlpha: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        delay: 0.2,
+      })
+
+      // caption lines
+      gsap.from(".js-caption > *", {
+        y: 20,
+        autoAlpha: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        delay: 0.4,
+      })
+    }, sectionRef2)
+
+    return () => ctx.revert()
+  }, [inView2])
+
+  useEffect(() => {
+    if (!sectionRef3.current || !inView3) return
+
+    const ctx = gsap.context(() => {
+      // Title entrance
+      gsap.from(".js-title", {
+        y: 80,
+        autoAlpha: 0,
+        duration: 1.1,
+        ease: "power3.out",
+        stagger: 0.05,
+      })
+
+      // decorative barbed wire
+      gsap.from(".js-barb", {
+        x: -40,
+        autoAlpha: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        delay: 0.2,
+      })
+
+      // caption lines
+      gsap.from(".js-caption > *", {
+        y: 20,
+        autoAlpha: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        delay: 0.4,
+      })
+    }, sectionRef3)
+
+    return () => ctx.revert()
+  }, [inView3])
 
   return (
-    <section ref={sectionRef} className="w-full min-w-[150vw] h-screen flex relative bg-[#0b0b0b]">
+    <section className="w-full min-w-[150vw] h-screen flex relative bg-[#0b0b0b]">
       {/* PANEL 1 */}
+      <div ref={triggerRef1} />
       <div
-        ref={leftRef}
-        className={cn("relative z-[20] w-[50%] px-12 py-8 flex flex-col", inView ? "" : "opacity-0")}
+        ref={sectionRef1}
+        className={cn("relative z-[20] w-[50%] px-12 py-8 flex flex-col", inView1 ? "" : "opacity-0")}
       >
         {/* Big title */}
         <div className="mt-4">
@@ -97,16 +172,18 @@ const SectionChild3: React.FC = () => {
             </div>
             <div className="mb-4 inline-block font-light">
               <span className="inline-block font-bold mr-1">
-                Cách thức tiến hành thực tế:
+                Sai lầm trọng yếu:
               </span>
               Giá không phản ánh đúng chi phí, vẫn còn sự can thiệp hành chính.
             </div>
           </div>
         </div>
       </div>
+
       <img src="/images/arrow.gif" className="absolute w-20 h-auto left-[40vw] bottom-40 rotate-180" />
+      <div ref={triggerRef2} />
       {/* PANEL 2 */}
-      <div className="relative w-[50%] bg-green-900/40 px-12 py-8 flex-col" ref={triggerRef}>
+      <div ref={sectionRef2} className="relative w-[50%] bg-green-900/40 px-12 py-8 flex-col">
 
         {/* Big title */}
         <div className="mt-4">
@@ -142,16 +219,19 @@ const SectionChild3: React.FC = () => {
             </div>
             <div className="mb-4 inline-block font-light">
               <span className="inline-block font-bold mr-1">
-                Cách thức tiến hành thực tế:
+                Sai lầm trọng yếu:
               </span>
               In tiền giải quyết vấn đề ngân sách và lương mà không có hàng hóa đối ứng.
             </div>
           </div>
         </div>
       </div>
+
       <img src="/images/arrow.gif" className="absolute w-20 h-auto left-[90vw] bottom-40 rotate-180" />
+
+      <div ref={triggerRef3} />
       {/* PANEL 3 */}
-      <div className="relative w-[50%] bg-[#e94b59] px-12 py-8 flex-col" ref={triggerRef}>
+      <div ref={sectionRef3} className="relative w-[50%] bg-[#e94b59] px-12 py-8 flex-col">
 
         {/* Big title */}
         <div className="mt-4">
@@ -187,7 +267,7 @@ const SectionChild3: React.FC = () => {
             </div>
             <div className="mb-4 inline-block font-light">
               <span className="inline-block font-bold mr-1">
-                Cách thức tiến hành thực tế:
+                Sai lầm trọng yếu:
               </span>
               Quản lý hành chính quá mức trong việc đổi tiền, gây khủng hoảng niềm tin và tạo điều kiện cho lạm phát bùng nổ ngay sau đó (tiền mới nhanh chóng mất giá).
             </div>

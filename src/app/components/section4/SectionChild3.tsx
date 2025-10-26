@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { usePathname } from "next/navigation";
 import ViewModal from "../ViewModal";
+import { onSubmitQuiz } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 const SectionChild2: React.FC = () => {
   const pathname = usePathname()
@@ -71,6 +73,46 @@ const SectionChild2: React.FC = () => {
     };
   }, []);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmitQuiz = async (answerType: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const toastId = toast.loading("Đang gửi câu trả lời...");
+
+    try {
+      const username = localStorage.getItem("username") || "Guest";
+      const isScored = answerType === "A";
+      const data = await onSubmitQuiz({
+        username,
+        quizId: 5,
+        isScored,
+      });
+
+      // close the loading toast before showing the result toast
+      toast.dismiss(toastId);
+
+      if (data.error) {
+        toast.error(`Có lỗi xảy ra: ${data.error}`);
+      } else {
+        if (isScored) {
+          toast.success("Chúc mừng! Bạn đã trả lời đúng câu hỏi.");
+        } else {
+          toast.warning("Rất tiếc! Câu trả lời của bạn chưa chính xác.");
+        }
+      }
+
+      setIsOpen(false);
+    } catch (err) {
+      toast.dismiss(toastId);
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <section
       ref={sectionRef}
@@ -88,7 +130,7 @@ const SectionChild2: React.FC = () => {
             <div className="space-y-3">
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("A")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 A. Chấm dứt cơ chế tập trung quan liêu bao cấp, chuyển sang phát triển kinh tế hàng hóa nhiều thành phần.
@@ -96,7 +138,7 @@ const SectionChild2: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("B")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 B. Phải đặt mục tiêu xây dựng nền quốc phòng toàn dân gắn liền với an ninh nhân dân.
@@ -104,7 +146,7 @@ const SectionChild2: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("C")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 C. Phát triển nông nghiệp là mặt trận hàng đầu và áp dụng Khoán 10 trong nông nghiệp.
@@ -112,7 +154,7 @@ const SectionChild2: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("D")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 D. Đẩy mạnh công tác xây dựng Đảng vững mạnh về chính trị, tư tưởng và tổ chức.

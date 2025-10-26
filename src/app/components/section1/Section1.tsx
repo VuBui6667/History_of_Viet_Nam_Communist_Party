@@ -110,7 +110,7 @@ const Section1: React.FC = () => {
         <div className="text-sm uppercase tracking-wider text-gray-600">VNR202 • Group 5</div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-12 px-8 md:px-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 items-start mb-12 px-8 md:px-12">
         <div className="lg:col-span-2">
           <div
             ref={headingRef}
@@ -119,10 +119,10 @@ const Section1: React.FC = () => {
           />
         </div>
 
-        <div className="lg:col-span-1">
-          <div
+        <div className="lg:col-span-1 mt-8">
+          <p
             ref={subRef}
-            className="max-w-md text-right text-sm md:text-base text-gray-800"
+            className="max-w-md text-right text-2xl text-gray-800"
           />
         </div>
       </div>

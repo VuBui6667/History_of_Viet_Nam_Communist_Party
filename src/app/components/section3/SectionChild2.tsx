@@ -6,6 +6,8 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import ViewModal from "../ViewModal"
 import MoneyCard3D from "../MoneyCard3D"
+import { onSubmitQuiz } from "@/lib/utils"
+import { toast } from "react-toastify"
 
 const SectionChild3: React.FC = () => {
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -60,6 +62,46 @@ const SectionChild3: React.FC = () => {
 
     return () => ctx.revert()
   }, [inView])
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmitQuiz = async (answerType: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const toastId = toast.loading("Đang gửi câu trả lời...");
+
+    try {
+      const username = localStorage.getItem("username") || "Guest";
+      const isScored = answerType === "B";
+      const data = await onSubmitQuiz({
+        username,
+        quizId: 3,
+        isScored,
+      });
+
+      // close the loading toast before showing the result toast
+      toast.dismiss(toastId);
+
+      if (data.error) {
+        toast.error(`Có lỗi xảy ra: ${data.error}`);
+      } else {
+        if (isScored) {
+          toast.success("Chúc mừng! Bạn đã trả lời đúng câu hỏi.");
+        } else {
+          toast.warning("Rất tiếc! Câu trả lời của bạn chưa chính xác.");
+        }
+      }
+
+      setIsOpen(false);
+    } catch (err) {
+      toast.dismiss(toastId);
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <section ref={sectionRef} className="h-screen flex relative">
@@ -186,13 +228,13 @@ const SectionChild3: React.FC = () => {
               margin: "0 auto"
             }}
           />
-          <div className="p-6 max-w-xl">
+          <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">Đây là Hội nghị nào của Đảng Cộng sản Việt Nam?</h2>
 
             <div className="space-y-3">
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("A")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 A. Hội nghị Trung ương 6 khóa IV
@@ -200,7 +242,7 @@ const SectionChild3: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("B")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 B. Hội nghị Trung ương 8 khóa V
@@ -208,7 +250,7 @@ const SectionChild3: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("C")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 C. Đại hội đại biểu toàn quốc lần thứ VI
@@ -216,7 +258,7 @@ const SectionChild3: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleSubmitQuiz("D")}
                 className="w-full text-left px-4 py-3 bg-white rounded shadow hover:bg-gray-100"
               >
                 D. Hội nghị Trung ương 5 khóa VII
