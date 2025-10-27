@@ -107,7 +107,7 @@ const Section1: React.FC = () => {
       className="h-[110vh] min-h-screen bg-[#efe8db] text-[#0b0b0b] py-8 md:py-12 relative"
     >
       <header className="flex justify-between items-start mb-8 px-8 md:px-12">
-        <div className="text-sm uppercase tracking-wider text-gray-600">VNR202 • Group 5</div>
+        <div className="text-lg uppercase tracking-wider text-gray-600">VNR202 • Group 5</div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 items-start mb-12 px-8 md:px-12">

@@ -93,7 +93,7 @@ const SectionChild1 = () => {
       <div className="relative h-screen flex flex-col items-center justify-center text-black">
         <div
           ref={topRef}
-          className="absolute top-8 left-0 right-0 text-center text-xs md:text-sm uppercase tracking-widest font-bold transform -translate-y-8 opacity-0"
+          className="absolute top-8 left-0 right-0 text-center text-xs md:text-lg uppercase tracking-widest font-bold transform -translate-y-8 opacity-0"
         >
           PERIOD 1
         </div>

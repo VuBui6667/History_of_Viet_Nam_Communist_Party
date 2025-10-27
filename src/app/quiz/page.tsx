@@ -88,7 +88,7 @@ export default function ScrollHorizontalPage() {
             }}
             className="p-6"
           >
-            <label className="mb-2 block text-sm font-medium text-gray-700">Mã số sinh viên của bạn</label>
+            <label className="mb-2 block text-lg font-medium text-gray-700">Mã số sinh viên của bạn</label>
             <input
               ref={refName}
               type="text"
@@ -176,7 +176,7 @@ export default function ScrollHorizontalPage() {
                   </button>
                 </div>
               </div>
-              <p className="mt-6 text-sm opacity-90">— Trân trọng, VNR202 • Group 5 —</p>
+              <p className="mt-6 text-lg opacity-90">— Trân trọng, VNR202 • Group 5 —</p>
             </div>
           </section>
         </div>

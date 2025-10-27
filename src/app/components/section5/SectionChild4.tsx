@@ -168,13 +168,19 @@ const SectionChild3: React.FC = () => {
               <span className="inline-block font-bold mr-1">
                 Cách thức tiến hành thực tế:
               </span>
-              Mặc dù chủ trương chuyển sang một giá, nhưng do không thống nhất được mức giá vật tư đầu vào (các Bộ/địa phương đề nghị giá thấp hơn kế hoạch), nên đã dẫn đến méo mó, không triệt để.
+              <ul className="list-disc list-inside space-y-2 text-xl mt-2">
+                <li>Các Bộ, ngành và địa phương phải xây dựng lại bảng giá phù hợp với thực tế.</li>
+                <li>Tuy nhiên, do chưa có sự thống nhất về giá đầu vào – đầu ra, nên việc thực hiện thiếu đồng bộ, méo mó, không triệt để.</li>
+              </ul>
             </div>
             <div className="mb-4 inline-block font-light">
               <span className="inline-block font-bold mr-1">
                 Sai lầm trọng yếu:
               </span>
-              Giá không phản ánh đúng chi phí, vẫn còn sự can thiệp hành chính.
+              <ul className="list-disc list-inside space-y-2 text-xl mt-2">
+                <li>Giá vẫn bị can thiệp hành chính, không phản ánh đúng chi phí thực tế.</li>
+                <li>Chính sách giá không theo tín hiệu thị trường, gây rối loạn cung – cầu, mất cân đối hàng hóa.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -215,13 +221,19 @@ const SectionChild3: React.FC = () => {
               <span className="inline-block font-bold mr-1">
                 Cách thức tiến hành thực tế:
               </span>
-              Để thực hiện &quot;bù giá vào lương&quot; (lương tăng 100% so với kế hoạch ban đầu), Nhà nước buộc phải in thêm một khối lượng tiền lớn vượt xa khả năng cung ứng hàng hóa.
+              <ul className="list-disc list-inside space-y-2 text-xl mt-2">
+                <li>Mức lương danh nghĩa tăng lên 100% so với kế hoạch ban đầu.</li>
+                <li>Để đáp ứng nhu cầu chi trả, Nhà nước buộc phải in thêm một lượng lớn tiền, vượt quá khả năng cung ứng hàng hóa.</li>
+              </ul>
             </div>
             <div className="mb-4 inline-block font-light">
               <span className="inline-block font-bold mr-1">
                 Sai lầm trọng yếu:
               </span>
-              In tiền giải quyết vấn đề ngân sách và lương mà không có hàng hóa đối ứng.
+              <ul className="list-disc list-inside space-y-2 text-xl mt-2">
+                <li>In tiền để giải quyết lương và ngân sách mà không có hàng hóa đối ứng, gây ra lạm phát cao.</li>
+                <li>Chính sách “bù giá vào lương” mất tác dụng nhanh chóng, đời sống người dân không được cải thiện thực chất.</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -263,13 +275,19 @@ const SectionChild3: React.FC = () => {
               <span className="inline-block font-bold mr-1">
                 Cách thức tiến hành thực tế:
               </span>
-              Đổi tiền vội vàng (từ ngày 14/9/1985) và quy định hạn mức đổi tiền tối đa cho mỗi gia đình (1.500 – 2.000 đồng tiền mới).
+              <ul className="list-disc list-inside space-y-2 text-xl mt-2">
+                <li>Đổi tiền đột ngột vào ngày 14/9/1985, trong thời gian ngắn (gọi là “đổi tiền vội vàng”).</li>
+                <li>Quy định hạn mức đổi tiền tối đa cho mỗi gia đình chỉ từ 1.500 – 2.000 đồng tiền mới.</li>
+              </ul>
             </div>
             <div className="mb-4 inline-block font-light">
               <span className="inline-block font-bold mr-1">
                 Sai lầm trọng yếu:
               </span>
-              Quản lý hành chính quá mức trong việc đổi tiền, gây khủng hoảng niềm tin và tạo điều kiện cho lạm phát bùng nổ ngay sau đó (tiền mới nhanh chóng mất giá).
+              <ul className="list-disc list-inside space-y-2 text-xl mt-2">
+                <li>Việc quản lý hành chính quá cứng nhắc trong đổi tiền gây khủng hoảng niềm tin trong dân chúng.</li>
+                <li>Tiền mới nhanh chóng mất giá, lạm phát bùng nổ, niềm tin vào Nhà nước bị ảnh hưởng nghiêm trọng.</li>
+              </ul>
             </div>
           </div>
         </div>

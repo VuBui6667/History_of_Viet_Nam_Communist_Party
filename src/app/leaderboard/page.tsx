@@ -67,7 +67,7 @@ export default async function LeaderboardPage() {
                 >
                   <div>{item.username}</div>
                   <div className="text-center">{item.isScored ? 'Đúng' : 'Sai'}</div>
-                  <div className="text-right text-sm text-gray-600">
+                  <div className="text-right text-lg text-gray-600">
                     {item.timeCompleted
                       ? formatDistanceToNow(new Date(item.timeCompleted), { addSuffix: true })
                       : '-'}

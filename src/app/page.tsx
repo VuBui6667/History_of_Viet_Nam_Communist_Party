@@ -137,7 +137,7 @@ export default function ScrollHorizontalPage() {
                 </button>
               </div>
             </div>
-            <p className="mt-6 text-sm opacity-90">— Trân trọng, VNR202 • Group 5 —</p>
+            <p className="mt-6 text-lg opacity-90">— Trân trọng, VNR202 • Group 5 —</p>
           </div>
         </section>
       </div>

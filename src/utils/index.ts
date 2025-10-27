@@ -6,7 +6,7 @@ interface ClassDictionary { [key: string]: any }
  * Supports strings, numbers, arrays and objects for conditional classes.
  *
  * Examples:
- * cn('p-4', isActive && 'bg-blue-500', ['text-sm', condition ? 'font-bold' : null], { 'hidden': !visible })
+ * cn('p-4', isActive && 'bg-blue-500', ['text-lg', condition ? 'font-bold' : null], { 'hidden': !visible })
  */
 export function cn(...args: ClassValue[]): string {
   const out: string[] = [];
