@@ -10,7 +10,6 @@ import Section5 from "../components/section5/Section5";
 import Section3 from "../components/section3/Section2";
 import Section4 from "../components/section4/Section4";
 import ViewModal from "../components/ViewModal";
-import { useFirstRender } from "@/hooks/useFirstRender";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
