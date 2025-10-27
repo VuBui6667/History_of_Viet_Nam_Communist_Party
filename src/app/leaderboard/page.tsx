@@ -1,5 +1,7 @@
 import { supabaseServer } from '@/lib/supabase/server'
-import { formatDistanceToNow } from 'date-fns'
+import { format } from 'date-fns'
+
+export const dynamic = 'force-dynamic'
 
 export default async function LeaderboardPage() {
   // show quizzes 1..5
@@ -10,6 +12,8 @@ export default async function LeaderboardPage() {
     .select('username, isScored, timeCompleted, quizId')
     .in('quizId', quizIds)
     .order('quizId', { ascending: true })
+    .order('isScored', { ascending: false }) // scored (true) first
+    .order('timeCompleted', { ascending: true }) // earlier completions first, nulls last
 
   if (error) {
     console.error(error)
@@ -69,7 +73,7 @@ export default async function LeaderboardPage() {
                   <div className="text-center">{item.isScored ? 'Đúng' : 'Sai'}</div>
                   <div className="text-right text-lg text-gray-600">
                     {item.timeCompleted
-                      ? formatDistanceToNow(new Date(item.timeCompleted), { addSuffix: true })
+                      ? format(new Date(item.timeCompleted), 'yyyy-MM-dd HH:mm:ss.SSS')
                       : '-'}
                   </div>
                 </div>
